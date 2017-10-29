@@ -94,6 +94,7 @@ Plot the funding over the decades for 10 most frequent primary disciplines.
 
 ```{r}
 # funding over the decades of frequent disiplines
+png(file = "funding_decades.png", width = 27, height = 20, units = "cm", pointsize = 10, bg = "transparent", res = 500)
 freq_disc_data %>%
         group_by(StartDecade, PrimaryDiscipline) %>%
         summarise (n = sum(OriginalAmount)) %>% 
@@ -105,7 +106,11 @@ freq_disc_data %>%
         coord_flip() +
         guides(fill =FALSE) +
         theme_bw()
+dev.off()
 ```
+
+![Funding decades](funding_decades.png)
+
 # How the terms have changed in project descriptions over decades.
 
 Create the dataframe with observations with project descriptions, include only frequent disciplines. Remove stop words and also a word *support*, because of the sentences like "This project is to support ... ".
@@ -130,6 +135,7 @@ plot_tf_idf <- term_tf_idf %>%
         arrange(desc(tf_idf)) %>%
         mutate(words = factor(words, levels = rev(unique(words))))
 
+png(file = "terms_decades.png", width = 27, height = 20, units = "cm", pointsize = 10, bg = "transparent", res = 500)
 plot_tf_idf %>% 
         group_by(StartDecade) %>% 
         top_n(15) %>% 
@@ -140,8 +146,9 @@ plot_tf_idf %>%
         facet_wrap(~StartDecade, ncol = 2, scales = "free") +
         coord_flip() +
         theme_bw()
+dev.off()
 ```
-
+![Terms decades](terms_decades.png)
 Graph for frequent (n=20) bigrams in project description texts.
 ```{r}
 bigram_graph <- descriptions %>%
@@ -157,18 +164,18 @@ set.seed(1234)
 
 a <- grid::arrow(type = "closed", length = unit(.15, "inches"))
 
+png(file = "bigram_graph.png", width = 27, height = 20, units = "cm", pointsize = 10, bg = "transparent", res = 500)
 ggraph(bigram_graph, layout = "fr") +
         geom_edge_link(aes(edge_alpha = n), show.legend = FALSE,
                        arrow = a, end_cap = circle(.07, 'inches')) +
         geom_node_point(color = "lightblue", size = 3) +
         geom_node_text(aes(label = name), vjust = 1, hjust = 1) +
         theme_void()
+dev.off()
 ```
 
-
-
-
-Plot field specific bigrams
+![Bigram graph](bigram_graph.png)
+Plot field specific bigrams.
 
 ```{r}
 # bigrams of description texts

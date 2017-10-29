@@ -62,6 +62,8 @@ Read in and merge the map data to plot grant money distribution.
 # read in u.s states shapefile for map plotting
 download.file("http://www2.census.gov/geo/tiger/GENZ2016/shp/cb_2016_us_state_20m.zip", dest = "states_shp.zip", mode = "wb")
 unzip("states_shp.zip", exdir = "states_shp")
+
+states <- readOGR("states_shp", "cb_2016_us_state_20m", encoding = "UTF-8")
 state_abbr <- read_csv("https://raw.githubusercontent.com/jasonong/List-of-US-States/master/states.csv") # download state names and abbreviation table
 grant_data <- left_join(grant_data, state_abbr, by = c("InstState" = "Abbreviation"))
 ```

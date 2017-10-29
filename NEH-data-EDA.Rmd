@@ -195,6 +195,7 @@ plot_tf_idf <- bigram_tf_idf %>%
         arrange(desc(tf_idf)) %>%
         mutate(bigram = factor(bigram, levels = rev(unique(bigram))))
 
+png(file = "field_bigram.png", width = 27, height = 20, units = "cm", pointsize = 10, bg = "transparent", res = 500)
 plot_tf_idf %>% 
         group_by(PrimaryDiscipline) %>% 
         top_n(5) %>% 
@@ -205,5 +206,8 @@ plot_tf_idf %>%
         facet_wrap(~PrimaryDiscipline, ncol = 2, scales = "free") +
         coord_flip() + 
         theme_bw()
+dev.off()
 ```
 
+
+![Field bigrams](field_bigram.png)

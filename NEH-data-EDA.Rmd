@@ -19,7 +19,7 @@ library(rgdal)
 library(rgeos)
 library(tmap)
 ```
-Read in data in files and bind them to one dataframe. 
+Read in data files and bind them to one dataframe. 
 
 ```{r}
 data_files <- paste0("neh-data/", list.files("neh-data")) # list data files
@@ -39,7 +39,7 @@ grant_data$ProjectDesc <- gsub("<\\/?p>", "", grant_data$ProjectDesc) # remove h
 grant_data$ProjectDesc <- gsub("\\&[^;]*;", "", grant_data$ProjectDesc) # remove html-entities
 ```
 
-Create some new variables: starting and end date of the project, project duration in years, a decade of when the project was awarded. Also convert missing value comment in description variable with `NA`.
+Create some new variables: starting and end date of the project, project duration in years, a decade when the project was awarded. Convert missing value comment in description variable with `NA`.
 
 ```{r}
 grant_data$StartDate <- mdy(gsub("(^\\d{1,2}\\/\\d{1,2}\\/\\d{4}).*", "\\1", grant_data$GrantPeriod))
@@ -52,7 +52,7 @@ grant_data <- mutate(grant_data, StartDecade = ifelse(year(StartDate) < 1990, "1
                                                                      ifelse(year(StartDate) < 2010 & year(StartDate) > 1999, "2000", "2010"))))
 
 grant_data <- grant_data %>%
-        mutate(ProjectDesc=replace(ProjectDesc, ProjectDesc=="No project description available", NA)) # replace, missing value comments in description column
+        mutate(ProjectDesc=replace(ProjectDesc, ProjectDesc=="No project description available", NA)) # replace, missing value comments in the description column
 
 ```
 
@@ -113,9 +113,7 @@ dev.off()
 
 ![Funding decades](funding_decades.png)
 
-# How the terms have changed in project descriptions over decades.
-
-Create the dataframe with observations with project descriptions, include only frequent disciplines. Remove stop words and also a word *support*, because of the sentences like "This project is to support ... ".
+How the terms have changed in project descriptions over decades? Create the dataframe with observations with project descriptions, include only frequent disciplines. Remove stop words and also a word *support*, because of the sentences like *"This project is to support ... "*.
 
 ```{r}
 descriptions <- grant_data %>% 
@@ -151,7 +149,7 @@ plot_tf_idf %>%
 dev.off()
 ```
 ![Terms decades](terms_decades.png)
-Graph for frequent (n=20) bigrams in project description texts.
+A directed graph for frequent (n=20) bigrams in project descriptions.
 ```{r}
 bigram_graph <- descriptions %>%
         unnest_tokens(bigram, ProjectDesc, format="text", token = "ngrams", n = 2) %>%
@@ -177,7 +175,7 @@ dev.off()
 ```
 
 ![Bigram graph](bigram_graph.png)
-Plot field specific bigrams.
+Plot field-specific bigrams.
 
 ```{r}
 # bigrams of description texts
